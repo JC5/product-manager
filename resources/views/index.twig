@@ -1,0 +1,175 @@
+{% extends "./layout/default" %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Basic product manager</h1>
+        </div>
+    </div>
+    {% for report in reports %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>{{ report.product }}</h2>
+                <p>Found product "{{ report.product }}" in your administration with the following associated costs.</p>
+                <p>
+                    Total costs: <span class="text-info">€ {{ report.numbers.total_costs_over_time|number_format(2, ',', '.') }}</span>,
+                    average per month: <span class="text-info">€ {{ (report.numbers.total_costs_over_time / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                </p>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Initial purchase of "{{ report.product }}"</h3>
+                <p>
+                    <small>All expenses tagged <code>product-{{ report.product }}-initial-purchase</code>
+                        or <code>product-{{ report.product }}-down-payment</code>
+                        or <code>product-{{ report.product }}-startup-costs</code>
+
+                    </small>
+
+                </p>
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th style="width:50%;">Description</th>
+                        <th style="width:20%;">Destination</th>
+                        <th style="width:20%;">Date</th>
+                        <th style="width:10%;">Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set currentSum = 0 %}
+                    {% for group in report.expenses['initial-purchase'] %}
+                        {% for transaction in group.transactions %}
+                            {% set currentSum = currentSum + transaction.amount %}
+                            <tr>
+                                <td><a href="{{ config('pm.url') }}/transactions/show/{{ group.id }}">{{ transaction.description }}</a></td>
+                                <td>{{ transaction.destinationName }}</td>
+                                <td>{{ transaction.date.format('d M Y') }}</td>
+                                <td style="text-align: right;"><span class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="3">Total</td>
+                        <td style="text-align: right;"><span class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            If replaced today (after {{ report.numbers.purchase_diff_in_months }} month(s) or {{ report.numbers.purchase_diff_in_years }}
+                            year(s))
+                            you should have saved, per month:
+                        </td>
+                        <td style="text-align: right;">
+                            <span class="text-info">€ {{ report.numbers.save_to_replace_now|number_format(2, ',', '.') }}</span>
+                        </td>
+                    </tr>
+                    {% for i in 1..5 %}
+                        <tr>
+                            <td colspan="3">If replaced in {{ i }} yr, save per month:</td>
+                            <td style="text-align: right;">
+                                <span class="text-info">€ {{ (currentSum / (i * 12))|number_format(2, ',', '.') }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <h3>Running costs over time</h3>
+
+        {% for title, group in report.expenses %}
+            {% if title != 'initial-purchase' %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4>{{ title }}</h4>
+                        <p>
+                            <small>All expenses tagged <code>product-{{ report.product }}-{{ title }}</code>.</small>
+
+                        </p>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th style="width:50%;">Description</th>
+                                <th style="width:20%;">Destination</th>
+                                <th style="width:20%;">Date</th>
+                                <th style="width:10%;">Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set currentSum = 0 %}
+                            {% for transactionGroup in group %}
+                                {% for transaction in transactionGroup.transactions %}
+                                    {% set currentSum = currentSum + transaction.amount %}
+                                    <tr>
+                                        <td><a href="{{ config('pm.url') }}/transactions/show/{{ transactionGroup.id }}">{{ transaction.description }}</a></td>
+                                        <td>{{ transaction.destinationName }}</td>
+                                        <td>
+                                            {{ transaction.date.format('d M Y') }}
+                                        </td>
+                                        <td style="text-align: right;"><span
+                                                    class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="3">Total</td>
+                                <td style="text-align: right;"><span class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Average per month ({{ report.numbers.purchase_diff_in_months }} months)</td>
+                                <td style="text-align: right;"><span
+                                            class="text-info">€ {{ (currentSum / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+        <!--
+        depreciation
+        fuel
+        food
+        accessories
+        grit
+        insurance
+        maintenance
+        doctor
+        veterinarian
+        repairs
+        taxes
+        fees
+        emergency
+        downtime
+        outage
+        failure
+        energy
+        support
+        updates
+        replacement
+        infrastructure
+        testing
+        diminished-performace
+        security
+        backup
+        training
+        audit
+        time
+
+    -->
+
+
+    {% endfor %}
+{% endblock %}
