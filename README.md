@@ -6,6 +6,12 @@ This is a fairly basic demonstration of what you can do with the [Firefly III](h
 
 This is a web-app, built on Laravel. It requires PHP 7.4. It can help you get an overview of the costs associated with a specific thing, such as your car, your pets or hobbies. It does this by collecting the tags associated with these things and group them according to the type of expense.
 
+### Screenshots
+
+![Screenshot](./docs/example1.png)
+
+![Screenshot](./docs/example2.png)
+
 ## How it works
 
 In your Firefly III installation, tag every product related expense with the `product-SUBJECT-TYPE` tag. For `SUBJECT`, you fill in the thing you wish to track. Use "car" for example. For `TYPE`, you fill in whatever the kind of cost is. Here are some examples:
@@ -33,5 +39,9 @@ Download or clone the source, run `composer install`. Copy `.env.example` to `.e
 ## Questions and support.
 
 This tool is built by [James Cole](james@firefly-iii.org). Contact me for questions.
+
+Some disclaimers:
+
+- Its not multi currency and will always display EUR.
 
 License is AGPL-3-or higher.
