@@ -8,9 +8,9 @@ This is a web-app, built on Laravel. It requires PHP 7.4. It can help you get an
 
 ### Screenshots
 
-![Screenshot](./docs/example1.png)
-
 ![Screenshot](./docs/example2.png)
+
+![Screenshot](./docs/example1.png)
 
 ## How it works
 
