@@ -61,9 +61,9 @@ class ReportGenerator
         // oldest transaction in array:
         $oldest = today();
         // result can be stored in report no problem:
-        foreach($result as $transaction) {
+        foreach ($result as $transaction) {
             $transaction->transactions[0]->date = new Carbon($transaction->transactions[0]->date);
-            $report['expenses'][$tagType][] = $transaction;
+            $report['expenses'][$tagType][]     = $transaction;
         }
 
         // also get sums:
@@ -71,17 +71,21 @@ class ReportGenerator
         foreach ($result as $transactionGroup) {
             /** @var Transaction $transaction */
             foreach ($transactionGroup->transactions as $transaction) {
-                $date                     = new Carbon($transaction->date);
-                $oldest                   = $date->lte($oldest) ? $date : $oldest;
-                $report['sums'][$tagType] = $report['sums'][$tagType] ?? '0';
-                $report['sums'][$tagType] = bcadd($report['sums'][$tagType], $transaction->amount);
+                $date                                       = new Carbon($transaction->date);
+                $oldest                                     = $date->lte($oldest) ? $date : $oldest;
+                $report['sums'][$tagType]                   = $report['sums'][$tagType] ?? '0';
+                $report['sums'][$tagType]                   = bcadd($report['sums'][$tagType], $transaction->amount);
                 $report['numbers']['total_costs_over_time'] = bcadd($report['numbers']['total_costs_over_time'], $transaction->amount);
             }
         }
         if ('initial-purchase' === $tagType) {
             // save to replace now (initial-purchase):
-            $diff                                         = $oldest->diffInMonths(today());
-            $report['numbers']['save_to_replace_now']     = bcdiv($report['sums']['initial-purchase'], (string) $diff);
+            $diff                                     = $oldest->diffInMonths(today());
+            $report['numbers']['save_to_replace_now'] = $report['sums']['initial-purchase'];
+            if (0 === $diff) {
+                $report['numbers']['save_to_replace_now'] = bcdiv($report['sums']['initial-purchase'], (string) $diff);
+            }
+
             $report['numbers']['purchase_oldest_date']    = $oldest->format('Y-m-d');
             $report['numbers']['purchase_diff_in_months'] = $diff;
             $report['numbers']['purchase_diff_in_years']  = round($diff / 12, 1);
@@ -127,7 +131,7 @@ class ReportGenerator
                 'initial-purchase' => '0',
             ],
             'numbers'  => [
-                'save_to_replace_now' => '0',
+                'save_to_replace_now'   => '0',
                 'total_costs_over_time' => '0',
             ],
         ];
