@@ -82,7 +82,7 @@ class ReportGenerator
             // save to replace now (initial-purchase):
             $diff                                     = $oldest->diffInMonths(today());
             $report['numbers']['save_to_replace_now'] = $report['sums']['initial-purchase'];
-            if (0 === $diff) {
+            if (0 !== $diff) {
                 $report['numbers']['save_to_replace_now'] = bcdiv($report['sums']['initial-purchase'], (string) $diff);
             }
 
