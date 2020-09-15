@@ -11,8 +11,15 @@
                 <h2>{{ report.product }}</h2>
                 <p>Found product "{{ report.product }}" in your administration with the following associated costs.</p>
                 <p>
-                    Total costs: <span class="text-info">€ {{ report.numbers.total_costs_over_time|number_format(2, ',', '.') }}</span>,
-                    average per month: <span class="text-info">€ {{ (report.numbers.total_costs_over_time / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                    Total costs: <span
+                        class="text-info">€ {{ report.numbers.total_costs_over_time|number_format(2, ',', '.') }}</span>,
+                    {% if 0 == report.numbers.purchase_diff_in_months %}
+                        average per month: <span
+                        class="text-info">€ {{ report.numbers.total_costs_over_time|number_format(2, ',', '.') }}</span>
+                    {% else %}
+                        average per month: <span
+                        class="text-info">€ {{ (report.numbers.total_costs_over_time / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                    {% endif %}
                 </p>
             </div>
         </div>
@@ -45,10 +52,14 @@
                         {% for transaction in group.transactions %}
                             {% set currentSum = currentSum + transaction.amount %}
                             <tr>
-                                <td><a href="{{ config('pm.url') }}/transactions/show/{{ group.id }}">{{ transaction.description }}</a></td>
+                                <td>
+                                    <a href="{{ config('pm.url') }}/transactions/show/{{ group.id }}">{{ transaction.description }}</a>
+                                </td>
                                 <td>{{ transaction.destinationName }}</td>
                                 <td>{{ transaction.date.format('d M Y') }}</td>
-                                <td style="text-align: right;"><span class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span></td>
+                                <td style="text-align: right;"><span
+                                        class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% endfor %}
@@ -56,23 +67,27 @@
                     <tfoot>
                     <tr>
                         <td colspan="3">Total</td>
-                        <td style="text-align: right;"><span class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span></td>
+                        <td style="text-align: right;"><span
+                                class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span></td>
                     </tr>
                     <tr>
                         <td colspan="3">
-                            If replaced today (after {{ report.numbers.purchase_diff_in_months }} month(s) or {{ report.numbers.purchase_diff_in_years }}
+                            If replaced today (after {{ report.numbers.purchase_diff_in_months }} month(s)
+                            or {{ report.numbers.purchase_diff_in_years }}
                             year(s))
                             you should have saved, per month:
                         </td>
                         <td style="text-align: right;">
-                            <span class="text-info">€ {{ report.numbers.save_to_replace_now|number_format(2, ',', '.') }}</span>
+                            <span
+                                class="text-info">€ {{ report.numbers.save_to_replace_now|number_format(2, ',', '.') }}</span>
                         </td>
                     </tr>
                     {% for i in 1..5 %}
                         <tr>
                             <td colspan="3">If replaced in {{ i }} yr, save per month:</td>
                             <td style="text-align: right;">
-                                <span class="text-info">€ {{ (currentSum / (i * 12))|number_format(2, ',', '.') }}</span>
+                                <span
+                                    class="text-info">€ {{ (currentSum / (i * 12))|number_format(2, ',', '.') }}</span>
                             </td>
                         </tr>
                     {% endfor %}
@@ -106,13 +121,15 @@
                                 {% for transaction in transactionGroup.transactions %}
                                     {% set currentSum = currentSum + transaction.amount %}
                                     <tr>
-                                        <td><a href="{{ config('pm.url') }}/transactions/show/{{ transactionGroup.id }}">{{ transaction.description }}</a></td>
+                                        <td>
+                                            <a href="{{ config('pm.url') }}/transactions/show/{{ transactionGroup.id }}">{{ transaction.description }}</a>
+                                        </td>
                                         <td>{{ transaction.destinationName }}</td>
                                         <td>
                                             {{ transaction.date.format('d M Y') }}
                                         </td>
                                         <td style="text-align: right;"><span
-                                                    class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span>
+                                                class="text-danger">€ {{ (transaction.amount*-1)|number_format(2, ',', '.') }}</span>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -121,12 +138,22 @@
                             <tfoot>
                             <tr>
                                 <td colspan="3">Total</td>
-                                <td style="text-align: right;"><span class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span></td>
+                                <td style="text-align: right;"><span
+                                        class="text-danger">€ {{ (currentSum*-1)|number_format(2, ',', '.') }}</span>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="3">Average per month ({{ report.numbers.purchase_diff_in_months }} months)</td>
-                                <td style="text-align: right;"><span
+                                <td colspan="3">Average per month ({{ report.numbers.purchase_diff_in_months }}
+                                    months)
+                                </td>
+                                <td style="text-align: right;">
+                                    {% if 0 === purchase_diff_in_months %}
+                                        <span
+                                            class="text-info">€ {{ currentSum|number_format(2, ',', '.') }}</span>
+                                    {% else %}
+                                        <span
                                             class="text-info">€ {{ (currentSum / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                                    {% endif %}
                                 </td>
                                 <td></td>
                             </tr>
