@@ -4,7 +4,7 @@ This is a fairly basic demonstration of what you can do with the [Firefly III](h
 
 ## Introduction
 
-This is a web-app, built on Laravel. It requires PHP 7.4. It can help you get an overview of the costs associated with a specific thing, such as your car, your pets or hobbies. It does this by collecting the tags associated with these things and group them according to the type of expense.
+This is a web-app, built on Laravel. It requires PHP 8.0. It can help you get an overview of the costs associated with a specific thing, such as your car, your pets or hobbies. It does this by collecting the tags associated with these things and group them according to the type of expense.
 
 ### Screenshots
 
