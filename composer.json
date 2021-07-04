@@ -17,12 +17,12 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": ">=8",
         "fideloper/proxy": "^4.2",
         "firefly-iii/api-support-classes": "^1.0@dev",
         "fruitcake/laravel-cors": "^1.0",
-        "guzzlehttp/guzzle": "^6.3",
-        "laravel/framework": "^7.0",
+        "guzzlehttp/guzzle": "^7",
+        "laravel/framework": "^8",
         "laravel/tinker": "^2.0",
         "rcrowe/twigbridge": "^0.12.1",
       "ext-bcmath": "*"
@@ -32,10 +32,10 @@
         "barryvdh/laravel-ide-helper": "^2.7",
         "doctrine/dbal": "^2.10",
         "facade/ignition": "^2.0",
-        "fzaninotto/faker": "^1.9.1",
+        "fakerphp/faker": "^1",
         "mockery/mockery": "^1.3.1",
-        "nunomaduro/collision": "^4.1",
-        "phpunit/phpunit": "^8.5",
+        "nunomaduro/collision": "^5",
+        "phpunit/phpunit": "^9",
         "roave/security-advisories": "dev-master"
     },
     "config": {
