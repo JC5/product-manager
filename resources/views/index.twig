@@ -147,12 +147,15 @@
                                     months)
                                 </td>
                                 <td style="text-align: right;">
-                                    {% if 0 == purchase_diff_in_months %}
+                                    {% if 0 == report.numbers.purchase_diff_in_months %}
                                         <span
                                             class="text-info">€ {{ currentSum|number_format(2, ',', '.') }}</span>
                                     {% else %}
                                         <span
-                                            class="text-info">€ {{ (currentSum / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                                            class="text-info">€ {{ (currentSum / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}
+
+
+                                        </span>
                                     {% endif %}
                                 </td>
                                 <td></td>
