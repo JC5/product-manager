@@ -57,9 +57,8 @@ class ReportGenerator
 
         // unify tag types:
         $tagType = $this->unifiedTagType($tagType);
+        $oldest = $report['numbers']['purchase_oldest_object'];
 
-        // oldest transaction in array:
-        $oldest = today();
         // result can be stored in report no problem:
         foreach ($result as $transaction) {
             $transaction->transactions[0]->date = new Carbon($transaction->transactions[0]->date);
@@ -78,17 +77,16 @@ class ReportGenerator
                 $report['numbers']['total_costs_over_time'] = bcadd($report['numbers']['total_costs_over_time'], $transaction->amount);
             }
         }
-        if ('initial-purchase' === $tagType) {
-            // save to replace now (initial-purchase):
-            $diff                                     = $oldest->diffInMonths(today());
-            $report['numbers']['save_to_replace_now'] = $report['sums']['initial-purchase'];
-            if (0 !== $diff) {
-                $report['numbers']['save_to_replace_now'] = bcdiv($report['sums']['initial-purchase'], (string) $diff);
-            }
 
-            $report['numbers']['purchase_oldest_date']    = $oldest->format('Y-m-d');
-            $report['numbers']['purchase_diff_in_months'] = $diff;
-            $report['numbers']['purchase_diff_in_years']  = round($diff / 12, 1);
+        $diff                                         = $oldest->diffInMonths(today());
+        $report['numbers']['purchase_diff_in_months'] = $diff;
+        $report['numbers']['purchase_oldest_date']    = $oldest->format('Y-m-d');
+        $report['numbers']['purchase_oldest_object'] = $oldest;
+        $report['numbers']['purchase_diff_in_years']  = round($diff / 12, 1);
+        $report['numbers']['save_to_replace_now']     = $report['sums']['initial-purchase'];
+
+        if (0 !== $diff) {
+            $report['numbers']['save_to_replace_now'] = bcdiv($report['sums']['initial-purchase'], (string) $diff);
         }
 
         return $report;
@@ -133,6 +131,7 @@ class ReportGenerator
             'numbers'  => [
                 'save_to_replace_now'   => '0',
                 'total_costs_over_time' => '0',
+                'purchase_oldest_object' => today()
             ],
         ];
     }

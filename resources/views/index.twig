@@ -8,6 +8,7 @@
     {% for report in reports %}
         <div class="row">
             <div class="col-lg-12">
+                <hr />
                 <h2>{{ report.product }}</h2>
                 <p>Found product "{{ report.product }}" in your administration with the following associated costs.</p>
                 <p>
@@ -19,7 +20,9 @@
                     {% else %}
                         average per month: <span
                         class="text-info">€ {{ (report.numbers.total_costs_over_time / report.numbers.purchase_diff_in_months)|number_format(2, ',', '.') }}</span>
+                        ({{ report.numbers.purchase_diff_in_months }} months(s))
                     {% endif %}
+                    {{ report.numbers.purchase_oldest_date }}
                 </p>
             </div>
         </div>
